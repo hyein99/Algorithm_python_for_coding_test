@@ -1,0 +1,93 @@
+# 그래프
+* 그래프를 표현하는 방법: 인접행렬, 인접리스트
+## 인접행렬
+* 2차원 배열로 그래프의 연결 관계를 표현하는 방식
+* 연결되지 않은 노드는 무한 비용이라고 작성
+* 모든 관계를 저장하기 때문에 노드 개수가 많을 수록 메모리가 불필요하게 낭비
+```python
+INF = 999999999
+
+graph = [
+    [0, 7, 5],
+    [7, 0, INF],
+    [5, INF, 0]
+]
+```
+
+## 인접리스트
+* 리스트로 그래프의 연결관계를 표현하는 방식
+* 모든 노드에 연결된 노드에 대한 정보를 차례대로 연결하여 저장
+* 연결된 정보만을 저장하기 때문에 메모리를 효율적으로 사용
+* 인접행렬 방식에 비해 특정한 두 노드가 연결되어 있는지에 대한 정보를 얻는 속도가 느림
+```python
+graph = [[] for _ in range(3)]
+
+graph[0].append((1, 7))
+graph[0].append((2, 5))
+graph[1].append((0, 7))
+graph[2].append((0, 5))
+```
+
+# DFS
+* 깊이 우선 탐색
+* 스택 자료구조
+* 재귀 이용
+```python
+graph = [
+    [],
+    [2,3,8],
+    [1,7],
+    [1,4,5],
+    [3,5],
+    [3,4],
+    [7],
+    [2,6,8],
+    [1,7]
+]
+visited = [0] * 9
+
+def dfs(v):
+    # 현재 노드를 방문 처리
+    visited[v] = 1
+    
+    # 현재 노드와 연결된 다른 노드를 재귀적으로 방문
+    for i in graph[v]:
+        if not visited[i]:
+            dfs(i)
+
+dfs(1)
+```
+
+# BFS
+* 너비 우선 탐색
+* 가까운 노드부터 탐색
+* 큐
+```python
+from collections import deque
+
+graph = [
+    [],
+    [2,3,8],
+    [1,7],
+    [1,4,5],
+    [3,5],
+    [3,4],
+    [7],
+    [2,6,8],
+    [1,7]
+]
+visited = [0] * 9
+
+def bfs(start):
+    qu = deque([start])
+    visited[start] = 1
+    
+    while qu:
+        v = qu.popleft()
+        for i in graph[v]:
+            if not visited[i]:
+                qu.append(i)
+                visited[i] = 1
+
+bfs(1)
+```
