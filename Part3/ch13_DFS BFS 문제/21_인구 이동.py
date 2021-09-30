@@ -1,5 +1,7 @@
 # https://www.acmicpc.net/problem/16234
 
+from collections import deque
+
 def solution():
     global visited
 
@@ -26,7 +28,8 @@ def dfs(i, j, tnum):
     # tnum 번째 연합 생성
     team = [(i, j)]
     tsum = population[i][j]
-    qu = [(i, j)]
+    qu = deque()
+    qu.append((i, j))
 
     while qu:
         x, y = qu.pop()
@@ -65,3 +68,4 @@ visited = [[0] * N for _ in range(N)]  # 방문여부
 
 # 출력
 print(solution())
+
