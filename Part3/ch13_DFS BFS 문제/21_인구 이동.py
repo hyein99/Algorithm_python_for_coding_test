@@ -1,26 +1,49 @@
 # https://www.acmicpc.net/problem/16234
 
 def solution():
+    global visited
+
     days = 0
-    # step 1) 국경선 공유할 수 있는 나라 체크하여 union에 표시
-    # step 2) 연합하는 나라끼리 인구이동
-    # step 3) 연합할 수 있는 나라 없으면 종료
-    # 연합을 이루고 있는 각 칸 인구수 = (연합 인구수)/칸수 (소수점 버림)
     while True:
-        union = [[0] * N for _ in range(N)]  # 연합 팀 표시
-        cnt = 1    # 연합 팀 번호
-        team = []  # 연합 팀 구성
-        psum = 0   # 인구이동할 인구 수
+        tnum = 1  # 연합팀 번호(연합팀 개수를 의미)
+
         for i in range(N):
             for j in range(N):
-                if union[i][j] == 0:  # 아직 연합이 정해지지 않은 곳
-                    x, y = i, j
-                    for (dx, dy) in dir:
-                        nx, ny = x+dx, y+dy
-                        # 연합 조건: 범위내,
+                if visited[i][j] == 0:  # 연합팀이 정해지지 않은 곳만 방문
+                    dfs(i, j, tnum)
+                    tnum += 1
 
+        # 종료조건: 연합할 수 없는 나라가 없는 경우
+        if tnum > N*N:
+            break
+
+        visited = [[0] * N for _ in range(N)]  # 방문 여부 초기화
         days += 1
     return days
+
+
+def dfs(i, j, tnum):
+    # tnum 번째 연합 생성
+    team = [(i, j)]
+    tsum = population[i][j]
+    qu = [(i, j)]
+
+    while qu:
+        x, y = qu.pop()
+        visited[x][y] = tnum
+        for (dx, dy) in dir:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < N and 0 <= ny < N and visited[nx][ny] == 0:  # 범위내에 있고 방문하지 않은 곳
+                if canUnite(population[x][y], population[nx][ny]):
+                    qu.append((nx, ny))
+                    visited[nx][ny] = tnum
+                    team.append((nx, ny))
+                    tsum += population[nx][ny]
+
+    # tnum 번째 연합 인구이동
+    tpop = tsum // len(team)
+    for (x, y) in team:
+        population[x][y] = tpop
 
 
 def canUnite(a, b):
@@ -36,7 +59,9 @@ N, L, R = map(int, input().split())
 population = []
 for _ in range(N):
     population.append(list(map(int, input().split())))
-dir = [(1,0), (0,1) (-1,0), (0,-1)]
+
+dir = [(1,0), (0,1), (-1,0), (0,-1)]   # 방향
+visited = [[0] * N for _ in range(N)]  # 방문여부
 
 # 출력
 print(solution())
