@@ -1,5 +1,5 @@
 # 입력
-N, M, K = map(int, input().split())
+N, M, K = map(int, input().split())  # N: 배열크기, M: 숫자가 더해지는 횟수, K: 연속 제한
 arr = list(map(int, input().split()))
 
 # 풀이 2)
